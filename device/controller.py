@@ -1,4 +1,4 @@
-# device.py by Jan Dvorak
+# controller.py by Jan Dvorak
 import socket
 import sys
 import random
@@ -6,15 +6,12 @@ import time
 from datetime import datetime
 
 # processing of command-line argument(s)
-if len( sys.argv ) < 4:
+if len( sys.argv ) < 3:
     print ( "Incorrect number of command-line arguments. Please launch the script as:" )
-    print ( "python3 device.py devicename serverport period" )
+    print ( "python3 controller.py serverport messagetype" )
 
-deviceName = sys.argv[1]
-deviceName = deviceName + "0000000000"
-deviceName = deviceName[0:10]
-serverPort = int( sys.argv[2] )
-period = int( sys.argv[3] )
+serverPort = int( sys.argv[1] )
+messageType = int( sys.argv[2] )
 
 # constants
 SERVER_IP = "127.0.0.1"   # IP address of the server
@@ -27,14 +24,9 @@ socket.connect( ( SERVER_IP, serverPort ) )
 
 random.seed()
 
-counter = 0;
 while True:
-    time.sleep(  period/1000  )
-    data = int( random.uniform( 0, 99999 ) )
+    data = messageType
     now = datetime.now()
     timestamp = int( datetime.timestamp( now ) * 1000000 )
-    message = "m" + deviceName + str( data ).zfill( 5 ) + str( timestamp )
+    message = "scontroller" + str( data ).zfill( 5 ) + str( timestamp )
     socket.sendall(  bytes( message, 'utf-8' )  )
-    counter = counter + 1
-    if ( counter == 1000 ):
-        break
