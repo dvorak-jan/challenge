@@ -1,54 +1,33 @@
-# challenge
-Eaton coding challenge
+# Eaton coding challenge
 
-============================================================================
+**1) My understanding of the challenge**
 
-The problem to solve is following:
+Write a server console application in C++ that will receive communication over the network from multiple client devices simultaneously. Implement the server in a manner allowing to use a shared variable containing the message count.
 
-* You monitor devices, which are sending data to you.
+**2) My proposed implementation:**
 
-* Each device have a unique name.
+* Server console application listening on a TCP port
+* Use of multithreading
+* Global variable containing the message count protected by mutex
+* Control of the server application over the TCP port from another application
 
-* Each device produces measurements.
+**3) Details:**
 
-The challenge is:
+I chose the TCP protocol as it allows me to achieve the level of service when each message intended to be sent will be received exactly once (i.e. no message should be lost, no message should be received more than once). Given the fact that the objective of the challenge is to "compute number of messages", I consider this level of service appropriate. Choice of the TCP protocol should be also useful during testing (knowing the number of messages sent from the devices will allow me to assess the correctness of the computed number of messages).
 
-* Compute number of messages you got or read from the devices.
-
-The solution can be in any language (preferably C++).
-
-The scope is open, you must decide how the devices will work in your system.
-
-The solution should be posted on GitHub or a similar page for a review.
-
-Please add documentation explaining us how to run your code.
-
-============================================================================
-
-1) My proposed implementation:
-
-Devices communicate with me (the Server) over the TCP protocol. This is my arbitrary decision but it helps me to achieve the level of service when each message intended to be sent will be received exactly once (i.e. no message should be lost, no message should be received more than once). Given the fact that the objective of the challenge is to "compute number of messages", I consider this level of service appropriate. Furthermore, it should be useful during testing (knowing the number of messages sent from the devices will allow me to assess the correctness of the computed number of messages).
-
-Considering the scope of the challenge I am not attempting to implement any standard industry protocol for the communication with the IoT devices over the TCP. My devices use a simple proprietary protocol that is described in documentation.
+Considering the scope of the challenge I have decided to implement just my own, very simple proprietary communication protocol that is described below (no industry-standard protocol).
 
 For the purposes of development and testing, I use very simple software simulation of devices written in python.
 
-The Server is written in C++
+The server application has no built-in user interface. Instead, it is controlled over the TCP port using another application (a python script). Only two basic functionalities will be implemented: print the message count, stop the server.
 
-Protocol:
 
-Byte 0x00: message type
-Values: "m" ... measurement
-        "s" ... service message
+**4) Device Communiation Protocol**
 
-Bytes from 0x01 to 0x0a: sender name
-Values: 10 characters ([a..z], [A..Z], [0..9])
-
-Bytes from 0x0b to 0x0f: data
-Five bytes of data, integer number from 0 to 65535
-In case of service message, this is where the message is encoded:
-Values: "00000" ... stop the server program
-        "00001" ... print the current number of messages and continue operating
-
-Bytes from 0x10 to 0x29: timestamp
-Example: 2021-05-16 16:22:35.914273
+Byte range | Length | Field | Values
+-----------|--------|-------|-------
+0x00 | 1 | Message type | "m" ... measurement, "s" ... service message
+0x01-0x05 | 5 | Message number | Integer from 0 to 99999
+0x06-0x0f | 10 | Sender name | String of 10 characters ([a..z], [A..Z], [0..9])
+0x10-0x1f | 16 | Measured data ("m" messages), control command ("s" messages) | Integer from 0 to 9999999999999999
+0x20-0x2f | 16 | Timestamp | Integer transformed from timestamp value
