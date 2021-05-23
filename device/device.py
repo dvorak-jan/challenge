@@ -1,4 +1,16 @@
 # device.py by Jan Dvorak
+
+# Devices are launched with the following command-line arguments:
+# device.py device_name server_IP_address server_port interval
+#
+# device_name -- 10 characters (will be shortened to 10 chars or supplemented by
+#                zeros to 10 chars)
+# server_IP_address -- IP address or 'localhost'
+# server_port -- port number from 1 to 65535
+# interval -- interval / 1000 (in seconds) is the period of time the device waits
+#             before sending the next message; 1 = wait 0,0001 second,
+#             1000 = wait 1 second, etc.
+# 
 import socket
 import sys
 import random

@@ -1,4 +1,13 @@
 # controller.py by Jan Dvorak
+
+# Controller is launched with the following command-line arguments:
+# python3 controller.py server_IP_address server_port message_number
+#
+# server_IP_address -- IP address or 'localhost'
+# server_port -- port number from 1 to 65535
+# message_number -- 1 or 2; 1 = print out message count and quit
+#                           2 = print out message count, continue receiving messages
+
 import socket
 import sys
 import random
