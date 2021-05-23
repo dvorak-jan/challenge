@@ -47,4 +47,4 @@ Byte range | Length | Field | Values
 -----------|--------|-------|-------
 0x00 | 1 | Message type | "m" ... measurement, "s" ... service message
 0x01-0x0a | 10 | Sender name | String of 10 characters ([a..z], [A..Z], [0..9])
-0x0a-0x0f | 6 | Measured data ("m" messages), control command ("s" messages) | Integer from 0 to 999999
+0x0b-0x0f | 5 | Measured data ("m" messages), control command ("s" messages) | Integer from 0 to 99999
