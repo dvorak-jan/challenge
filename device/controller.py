@@ -6,17 +6,18 @@ import time
 from datetime import datetime
 
 # processing of command-line argument(s)
-if len( sys.argv ) < 3:
+if len( sys.argv ) < 4:
     print ( "Incorrect number of command-line arguments. Please launch the script as:" )
-    print ( "python3 controller.py serverport messagetype" )
+    print ( "python3 controller.py serveraddress serverport messagetype" )
 
-serverPort = int( sys.argv[1] )
-messageType = int( sys.argv[2] )
+serverIPAddress = sys.argv[1]
+serverPort = int( sys.argv[2] )
+messageType = int( sys.argv[3] )
 
-# constants
-SERVER_IP = "127.0.0.1"   # IP address of the server
-DEVICE_IP = "127.0.0.1"   # IP address of the device
-
+if (serverIPAddress == "localhost"):
+    SERVER_IP = "127.0.0.1"
+else:
+    SERVER_IP = serverIPAddress
 
 # socket
 socket = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
